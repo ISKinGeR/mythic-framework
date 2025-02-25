@@ -237,30 +237,33 @@ function CheckPlayerAuth(source, doorPermissionData)
             local stateId = char:GetData('SID')
 
             if Jobs.Permissions:HasJob(source, 'dgang', false, false, 99, true) then
-				return true
-			end
+                return true
+            end
 
             for k, v in ipairs(doorPermissionData) do
-				if v.type == 'character' then
-					if stateId == v.SID then
-						return true
-					end
-				elseif v.type == 'job' then
-					if v.job then
-						if Jobs.Permissions:HasJob(source, v.job, v.workplace, v.grade, v.gradeLevel, v.reqDuty, v.jobPermission) then
-							return true
-						end
-					elseif v.jobPermission then
-						if Jobs.Permissions:HasPermission(source, v.jobPermission) then
-							return true
-						end
-					end
+                if v.type == 'character' then
+                    if stateId == v.SID then
+                        return true
+                    end
+                elseif v.type == 'job' then
+                    if v.job then
+                        if Jobs.Permissions:HasJob(source, v.job, v.workplace, v.grade, v.gradeLevel, v.reqDuty, v.jobPermission) then
+                            return true
+                        end
+                    elseif v.jobPermission then
+                        if Jobs.Permissions:HasPermission(source, v.jobPermission) then
+                            return true
+                        end
+                    end
                 elseif v.type == 'propertyData' then
-					if Properties.Keys:HasAccessWithData(source, v.key, v.value) then
-						return true
-					end
-				end
-			end
+                    if Properties.Keys:HasAccessWithData(source, v.key, v.value) then
+                        return true
+                    end
+                elseif v.type == 'RealHouse' then
+                    local havePerm = exports['mythic-ahs']:CheckPermForHouse(stateId, v.HouseName)
+                    return havePerm
+                end
+            end
         end
     end
     return false

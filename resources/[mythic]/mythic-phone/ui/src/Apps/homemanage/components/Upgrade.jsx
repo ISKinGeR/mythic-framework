@@ -31,8 +31,8 @@ export default ({ property, type, upgrade, setLoading, onRefresh }) => {
 
 	const [buying, setBuying] = useState(false);
 
-    const current = upgrade.levels?.[(property?.upgrades?.[type] ?? 1) - 1];
-    const next = upgrade.levels?.[(property?.upgrades?.[type] ?? 1)];
+	const current = upgrade?.levels?.[(property?.upgrades?.[type] ?? 1) - 1] || {};
+	const next = upgrade?.levels?.[(property?.upgrades?.[type] ?? 1)] || {};	
 
 	const onPurchase = async () => {
         setLoading(true);

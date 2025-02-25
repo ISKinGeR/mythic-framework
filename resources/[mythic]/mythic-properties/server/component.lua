@@ -105,10 +105,51 @@ PROPERTIES = {
 						p:resolve(success)
 					end)
 					return Citizen.Await(p)
+				elseif type == "real" then 
+					local p = promise.new()
+					local doc = {
+						type = type,
+						label = label,
+						price = price,
+						sold = false,
+						owner = false,
+						location = {
+							front = pos,
+						},
+						upgrades = {
+							interior = "mlo",
+						}
+					}
+	
+					Database.Game:insertOne({
+						collection = "properties",
+						document = doc,
+					}, function(success, result, insertedIds)
+						if success then
+							doc.id = insertedIds[1]
+							doc.interior = interior
+							doc.locked = true
+	
+							for k, v in pairs(doc.location) do
+								for k2, v2 in pairs(v) do
+									doc.location[k][k2] = doc.location[k][k2] + 0.0
+								end
+							end
+	
+							_properties[doc.id] = doc
+	
+							Chat.Send.Server:Single(source, "Property Added, Property ID: " .. doc.id)
+	
+							TriggerClientEvent("Properties:Client:Update", -1, doc.id, doc)
+						end
+	
+						p:resolve(success)
+					end)
+					return Citizen.Await(p)
 				else
 					Chat.Send.Server:Single(source, "Invalid Interior Combination")
 					return false
-				end
+				end			
 			else
 				Chat.Send.Server:Single(source, "Invalid Property Type")
 				return false

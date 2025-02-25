@@ -223,7 +223,9 @@ DOORS = {
 					if Properties.Keys:HasAccessWithData(v.key, v.value) then
 						return true
 					end
-				end
+				elseif v.type == 'RealHouse' then
+					return exports['mythic-ahs']:CheckPermForHouseClient(LocalPlayer.state.Character:GetData("ID"), v.HouseName)
+				end	
 			end
 		end
 		return false

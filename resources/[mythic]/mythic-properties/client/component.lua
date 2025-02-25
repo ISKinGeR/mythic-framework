@@ -518,14 +518,16 @@ PROPERTIES = {
 		local myPos = GetEntityCoords(LocalPlayer.state.ped)
 		local closest = nil
 		for k, v in pairs(_properties) do
-			local dist = #(myPos - vector3(v.location.front.x, v.location.front.y, v.location.front.z))
-			if dist < 3.0 and (not closest or dist < closest.dist) then
-				closest = {
-					dist = dist,
-					propertyId = v.id,
-				}
+			if v.type ~= "real" then -- Skip "real" properties
+				local dist = #(myPos - vector3(v.location.front.x, v.location.front.y, v.location.front.z))
+				if dist < 3.0 and (not closest or dist < closest.dist) then
+					closest = {
+						dist = dist,
+						propertyId = v.id,
+					}
+				end
 			end
-		end
+		end		
 		return closest
 	end,
 	GetNearHouseBackdoor = function(self)

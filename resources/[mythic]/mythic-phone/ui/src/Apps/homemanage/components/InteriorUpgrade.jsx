@@ -57,7 +57,7 @@ export default ({ property, type, upgrade, setLoading, onRefresh }) => {
 	const [buying, setBuying] = useState(false);
 	const [purchase, setPurchase] = useState(null);
 
-    const current = upgrade.levels.find(l => l.id == property?.upgrades?.interior);
+	const current = upgrade?.levels?.find(l => l.id == property?.upgrades?.interior);
 
 	const onConfirmPurchase = (name, int) => {
 		setPurchase({

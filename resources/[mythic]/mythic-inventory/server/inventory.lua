@@ -297,6 +297,18 @@ function refreshShit(sid, adding)
 	end
 end
 
+RegisterNetEvent("inventory:addMoreEntityTypes")
+AddEventHandler("inventory:addMoreEntityTypes", function(entityList)
+    if entityList and type(entityList) == "table" then
+        for _, entity in ipairs(entityList) do
+            if entity.id then
+                LoadedEntitys[tonumber(entity.id)] = entity
+            end
+        end
+    else
+    end
+end)
+
 function entityPermCheck(source, invType)
 	local plyr = Fetch:Source(source)
 	local char = plyr:GetData("Character")
@@ -304,6 +316,7 @@ function entityPermCheck(source, invType)
 	local shittyInvData = LoadedEntitys[tonumber(invType)]
 
 	if shittyInvData then
+
 		return (
 				shittyInvData.restriction == nil
 				or (shittyInvData.restriction.job ~= nil and Jobs.Permissions:HasJob(
@@ -327,6 +340,7 @@ function entityPermCheck(source, invType)
 					"ID"
 				))
 				or (shittyInvData.restriction.admin and plyr.Permissions:IsAdmin())
+				or (shittyInvData.restriction.IsOwnedHouse and shittyInvData.restriction.IsOwnedHouse.id and exports['mythic-ahs']:CheckPermForHouse(char:GetData("SID"), shittyInvData.restriction.IsOwnedHouse.id))
 			)
 	else
 		return false

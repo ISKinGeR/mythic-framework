@@ -8,6 +8,7 @@ PropertyTypes = {
     .warehouse,
     .office,
     .container,
+    .real
 }
 
 PropertyConfig = {

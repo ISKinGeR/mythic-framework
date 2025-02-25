@@ -47,12 +47,14 @@ export default ({ property, onRefresh, setLoading, myKey }) => {
 			<div className={classes.wrapper}>
 				{availableUpgrades ? (
 					<List className={classes.list}>
-						<InteriorUpgrade 
-							property={property}
-							upgrade={availableUpgrades.interior}
-							setLoading={setLoading}
-							onRefresh={onRefresh}
-						/>
+						{availableUpgrades.interior && (
+							<InteriorUpgrade 
+								property={property}
+								upgrade={availableUpgrades.interior}
+								setLoading={setLoading}
+								onRefresh={onRefresh}
+							/>
+						)}
 						{Object.keys(availableUpgrades).filter(u => u !== "interior").map(upgrade => {
 							return (
 								<Upgrade 
