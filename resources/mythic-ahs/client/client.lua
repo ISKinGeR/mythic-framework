@@ -9,6 +9,7 @@ function RetrieveComponents()
     Notification = exports['mythic-base']:FetchComponent('Notification')
     Inventory = exports["mythic-base"]:FetchComponent("Inventory")
     Targeting = exports["mythic-base"]:FetchComponent("Targeting")
+    Polyzone = exports["mythic-base"]:FetchComponent("Polyzone")
 end
 
 AddEventHandler('Core:Shared:Ready', function()
@@ -17,7 +18,8 @@ AddEventHandler('Core:Shared:Ready', function()
         'Logger',
         'Notification',
         "Inventory",
-        "Targeting"
+        "Targeting",
+        "Polyzone"
     }, function(error)  
         if #error > 0 then
             exports["mythic-base"]:FetchComponent("Logger"):Critical("KR", "Failed To Load All Dependencies")
@@ -26,6 +28,55 @@ AddEventHandler('Core:Shared:Ready', function()
         RetrieveComponents()
 
     end)
+end)
+
+RegisterNetEvent("AHS:Client:CreateFunPoly", function(polys)
+    kprint(json.encode(polys))
+    while Polyzone == nil do 
+        Wait(123) 
+    end
+    for i, polyData in ipairs(polys) do
+        local polygon = polyData[1]
+        local properties = polyData[2]
+
+        if polygon and properties then
+            local zoneName = string.format("AHS:HOUSE:%s:%d", properties.name, i)
+            Polyzone.Create:Poly(zoneName, polygon, {
+                minZ = properties.minZ,
+                maxZ = properties.maxZ
+            })
+        end
+    end
+end)
+
+local function extractHouseId(zoneId)
+    if string.sub(zoneId, 1, 10) == "AHS:HOUSE:" then
+        return string.match(zoneId, "AHS:HOUSE:([^:]+)")
+    end
+    return nil
+end
+
+AddEventHandler('Polyzone:Enter', function(id, point, insideZone, data)
+    if string.sub(id, 1, 10) == "AHS:HOUSE:" then
+        local houseId = extractHouseId(id)
+        if houseId then
+            Callbacks:ServerCallback("AHS:InHousePoly", houseId, function(state)
+                if state then
+                    kprint("Entered:", houseId)
+                end
+            end)
+        end
+    end
+end)
+
+AddEventHandler('Polyzone:Exit', function(id, point, insideZone, data)
+    if string.sub(id, 1, 10) == "AHS:HOUSE:" then
+        local houseId = extractHouseId(id)
+        if houseId then
+            kprint("Leaved:", houseId)
+            TriggerEvent("AHS:OutHousePoly")
+        end
+    end
 end)
 
 RegisterNetEvent("AHS:Client:CreatePoly", function(stashes)
@@ -45,7 +96,7 @@ RegisterNetEvent("AHS:Client:CreatePoly", function(stashes)
 end)
 
 RegisterNetEvent("OpenRealStash", function(data)
-    print("Inventory Data: " .. json.encode(data.menu[1].data.data.inventory))
+    kprint("Inventory Data: " .. json.encode(data.menu[1].data.data.inventory))
     Inventory.Dumbfuck:Open(data.menu[1].data.data.inventory)
 end)
 
@@ -56,7 +107,7 @@ RegisterNetEvent('receiveRealHouseList', function(houseList, ThouseList)
     if ThouseList then table.move(ThouseList, 1, #ThouseList, #_HouseList + 1, _HouseList) end
 
     if _DebugEnabled then
-        print("Ready!", #_HouseList)
+        kprint("Ready!", #_HouseList)
     end
 end)
 
@@ -126,10 +177,10 @@ RegisterCommand("debugShapes", function()
     if _DebugEnabled then
         isDebuggingShapes = not isDebuggingShapes
         if isDebuggingShapes then
-            print("Debug mode for shapes turned on.")
+            kprint("Debug mode for shapes turned on.")
             startShapeDebugDrawing()
         else
-            print("Debug mode for shapes turned off.")
+            kprint("Debug mode for shapes turned off.")
             stopShapeDebugDrawing()
         end
     end

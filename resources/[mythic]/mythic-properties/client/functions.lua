@@ -138,6 +138,33 @@ function ExitProperty(data, backdoor)
 	end
 end
 
+function ExitPropertyReal(data, backdoor)
+	Callbacks:ServerCallback("Properties:ExitPropertyReal", {}, function(pId)
+		_insideProperty = false
+		_insideInterior = false
+		local property = _properties[pId]
+
+		if not property then return; end
+		DestroyFurniture(true)
+		SetFurnitureEditMode(false)
+		if _placingFurniture then
+			ObjectPlacer:Cancel(true, true)
+			Phone:ResetRoute()
+			_placingFurniture = false
+			LocalPlayer.state.placingFurniture = false
+			LocalPlayer.state.furnitureEdit = false
+		end
+	end)
+	Notification.Persistent:Remove("furniture")
+	if _previewingInterior then
+        EndPreview()
+	end
+end
+
 RegisterNetEvent("Properties:Client:ForceExitProperty", function()
 	ExitProperty()
+end)
+
+RegisterNetEvent("AHS:OutHousePoly", function()
+	ExitPropertyReal()
 end)

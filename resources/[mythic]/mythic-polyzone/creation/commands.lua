@@ -7,7 +7,7 @@ RegisterNetEvent("polyzone:createcommand", function(args)
 		})
 		return
 	end
-	if zoneType ~= "poly" and zoneType ~= "circle" and zoneType ~= "box" then
+	if zoneType ~= "poly" and zoneType ~= "circle" and zoneType ~= "box" and zoneType ~= "polyS" then
 		TriggerEvent("chat:addMessage", {
 			template = '<div class="chat-message server"><div class="chat-message-header">[SERVER]</div><div class="chat-message-body">{0}</div></div>',
 			args = { "Zone type must be one of: poly, circle, box" },

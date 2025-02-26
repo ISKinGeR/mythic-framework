@@ -32,7 +32,7 @@ AddEventHandler("Core:Shared:Ready", function()
         kprint("WE Are Ready!")
         AddedCustomEntitys()
         LoadHouseStashes()
-
+        LoadHousePolyZones()
         Middleware:Add("Characters:GetSpawnPoints", function(source, charId)        
             local p = promise.new()
             Database.Game:find({
@@ -79,6 +79,7 @@ AddEventHandler("Core:Shared:Ready", function()
 
         Middleware:Add('Characters:Spawning', function(source)
             ImNewIdotNotPlayer(source) -- just kidding <3
+            LoadHousePolyZones(source)
         end)
 
         Middleware:Add("Characters:Logout", function(source)
@@ -133,6 +134,7 @@ AddEventHandler("Core:Shared:Ready", function()
         --         end
         --     end
         -- end)
+
     end)
 end)
 
@@ -377,6 +379,14 @@ function LoadHouseStashes()
     end)
 end
 
+function LoadHousePolyZones(source)
+    if _RPolyzones and #_RPolyzones > 0 and source then
+        TriggerClientEvent("AHS:Client:CreateFunPoly", source, _RPolyzones)
+    elseif _RPolyzones and #_RPolyzones > 0 then
+        TriggerClientEvent("AHS:Client:CreateFunPoly", -1, _RPolyzones)
+    end
+end
+
 function ImNewIdotNotPlayer(source)
     TriggerClientEvent("AHS:Client:CreatePoly", source, _TRealHouseList)
     if _DebugEnabled then
@@ -417,15 +427,3 @@ RegisterCommand("consoleDel", function(source, args, rawCommand)
         DeleteRealStash(id)
     end
 end, false)
-
-function kprint(message, additionalMessage)
-    if _DebugEnabled then
-        local messageToPrint = "[DEBUG] " .. tostring(message)
-
-        if additionalMessage then
-            messageToPrint = messageToPrint .. " - " .. tostring(additionalMessage)
-        end
-
-        print(messageToPrint)
-    end
-end

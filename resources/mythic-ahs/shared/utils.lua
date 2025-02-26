@@ -15,3 +15,11 @@ function DoseHeHaveAccessToThisDoor(CharacterID, HouseName)
     end
     return false
 end
+
+function kprint(...)
+    if _DebugEnabled then
+        local args = {...}
+        local messageToPrint = "[DEBUG] " .. table.concat(args, "   ")
+        print(messageToPrint)
+    end
+end

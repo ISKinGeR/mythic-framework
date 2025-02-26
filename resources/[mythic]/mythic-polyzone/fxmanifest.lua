@@ -23,3 +23,11 @@ client_scripts {
 server_scripts {
     'server/*.lua'
 }
+
+dependencies {
+	'ox_lib',
+}
+
+shared_scripts {
+    '@ox_lib/init.lua',
+}

@@ -55,6 +55,12 @@ RegisterNetEvent("Properties:Client:InnerStuff", function(propertyData, int, fur
 	Sync:Stop(1)
 end)
 
+RegisterNetEvent("Properties:Client:InnerStuffReal", function(propertyData, int, furniture)
+	_insideProperty = propertyData
+	_insideInterior = int
+	CreateFurniture(furniture)
+end)
+
 ---- TARGETTING EVENTS ----
 AddEventHandler("Properties:Client:Stash", function(t, data)
 	Properties.Extras:Stash()

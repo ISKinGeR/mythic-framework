@@ -17,6 +17,8 @@ AddEventHandler("polyzone:pzcreate", function(zoneType, name, args)
 
   if zoneType == 'poly' then
     polyStart(name)
+  elseif  zoneType == 'polyS' then
+    polySStart(name)
   elseif zoneType == "circle" then
     local radius = nil
     if #args >= 3 then radius = tonumber(args[3])
@@ -74,6 +76,8 @@ AddEventHandler("polyzone:pzfinish", function()
     circleFinish()
   elseif createdZoneType == "box" then
     boxFinish()
+  elseif createdZoneType == "polyS" then
+    polySFinish()
   end
 
   TriggerEvent('chat:addMessage', {
