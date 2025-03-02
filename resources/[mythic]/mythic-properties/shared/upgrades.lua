@@ -27,6 +27,16 @@ PropertyUpgrades = {
             levels = {}
         }
     },
+    real = {
+        storage = {
+            name = "Storage",
+            levels = {}
+        },
+        garage = {
+            name = "Garage", 
+            levels = {}
+        }
+    },
 }
 
 CreateThread(function()
