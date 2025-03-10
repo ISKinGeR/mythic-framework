@@ -558,11 +558,8 @@ function RegisterCallbacks()
                                     if #(GetEntityCoords(ownerPed) - GetEntityCoords(myPed)) <= 5.0 then
                                         local d = Banking.Accounts:GetOrganization(data.dealerId)
                                         local p = Banking.Accounts:GetPersonal(ownercharacter:GetData('SID'))
-                                        print("p.Account", json.encode(p))
                                         if d and d.Account and p and p.Account then
 
-                                            local before = Banking.Balance:Get(p.Account)
-                                            print("Money before:", before)
                                             local success = Banking.Balance:Charge(d.Account, buybackPrice, {
                                                 type = 'bill',
                                                 transactionAccount = p.Account,
@@ -621,7 +618,7 @@ function RegisterCallbacks()
                                                     },
                                                 })
 
-                                                local afterrr = Banking.Balance:Deposit(p.Account, buybackPrice, {
+                                                Banking.Balance:Deposit(p.Account, buybackPrice, {
                                                     type = 'transfer',
                                                     transactionAccount = d.Account,
                                                     title = 'Vehicle Buyback',
@@ -635,8 +632,6 @@ function RegisterCallbacks()
                                                         }
                                                     },
                                                 })
-
-                                                print("Money afterrr:", afterrr)
 
                                                 Vehicles:Delete(veh, function() end)
 
