@@ -554,7 +554,7 @@ function RegisterCallbacks()
                                 if owner then
                                     local ownerPed = GetPlayerPed(owner:GetData('Source'))
                                     local myPed = GetPlayerPed(source)
-                                    local ownercharacter = owner:GetData('Character')
+                                    local ownercharacter = owner:GetData('Character') -- Fix buyback 
 
                                     if #(GetEntityCoords(ownerPed) - GetEntityCoords(myPed)) <= 5.0 then
                                         local d = Banking.Accounts:GetOrganization(data.dealerId)
@@ -565,7 +565,7 @@ function RegisterCallbacks()
                                                 type = 'bill',
                                                 transactionAccount = p.Account,
                                                 title = 'Vehicle Buyback',
-                                                description = string.format('Vehicle Buyback of a %s %s (%s) From %s %s (%s)', vehEnt.state.Make, vehEnt.state.Model, vehEnt.state.VIN, ownercharacter:GetData("First"), ownercharacter:GetData("Last"), ownercharacter:GetData("SID")),
+                                                description = string.format('Vehicle Buyback of a %s %s (%s) From %s %s (%s)', vehEnt.state.Make, vehEnt.state.Model, vehEnt.state.VIN, ownercharacter:GetData("First"), ownercharacter:GetData("Last"), ownercharacter:GetData("SID")), -- Fix buyback
                                                 data = {
                                                     buyer = {
                                                         ID = char:GetData('ID'),
