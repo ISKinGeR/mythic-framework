@@ -554,18 +554,20 @@ function RegisterCallbacks()
                                 if owner then
                                     local ownerPed = GetPlayerPed(owner:GetData('Source'))
                                     local myPed = GetPlayerPed(source)
-                                    local ownercharacter = owner:GetData('Character') -- Fix buyback 
-
+                                    local ownercharacter = owner:GetData('Character')
                                     if #(GetEntityCoords(ownerPed) - GetEntityCoords(myPed)) <= 5.0 then
                                         local d = Banking.Accounts:GetOrganization(data.dealerId)
-                                        local p = Banking.Accounts:GetPersonal(owner:GetData('SID'))
-
+                                        local p = Banking.Accounts:GetPersonal(ownercharacter:GetData('SID'))
+                                        print("p.Account", json.encode(p))
                                         if d and d.Account and p and p.Account then
+
+                                            local before = Banking.Balance:Get(p.Account)
+                                            print("Money before:", before)
                                             local success = Banking.Balance:Charge(d.Account, buybackPrice, {
                                                 type = 'bill',
                                                 transactionAccount = p.Account,
                                                 title = 'Vehicle Buyback',
-                                                description = string.format('Vehicle Buyback of a %s %s (%s) From %s %s (%s)', vehEnt.state.Make, vehEnt.state.Model, vehEnt.state.VIN, ownercharacter:GetData("First"), ownercharacter:GetData("Last"), ownercharacter:GetData("SID")), -- Fix buyback
+                                                description = string.format('Vehicle Buyback of a %s %s (%s) From %s %s (%s)', vehEnt.state.Make, vehEnt.state.Model, vehEnt.state.VIN, ownercharacter:GetData("First"), ownercharacter:GetData("Last"), ownercharacter:GetData("SID")),
                                                 data = {
                                                     buyer = {
                                                         ID = char:GetData('ID'),
@@ -582,8 +584,8 @@ function RegisterCallbacks()
                                                 table.insert(ownerHistory, {
                                                     Type = oldOwner.Type,
                                                     Id = oldOwner.Id,
-                                                    First = owner:GetData('First'),
-                                                    Last = owner:GetData('Last'),
+                                                    First = ownercharacter:GetData('First'),
+                                                    Last = ownercharacter:GetData('Last'),
                                                     Time = os.time(),
                                                 })
 
@@ -606,10 +608,10 @@ function RegisterCallbacks()
                                                         data = stockInfo.data,
                                                     },
                                                     previousOwner = {
-                                                        ID = owner:GetData('ID'),
-                                                        SID = owner:GetData('SID'),
-                                                        First = owner:GetData('First'),
-                                                        Last = owner:GetData('Last'),
+                                                        ID = ownercharacter:GetData('ID'),
+                                                        SID = ownercharacter:GetData('SID'),
+                                                        First = ownercharacter:GetData('First'),
+                                                        Last = ownercharacter:GetData('Last'),
                                                     },
                                                     buyer = {
                                                         ID = char:GetData('ID'),
@@ -619,7 +621,7 @@ function RegisterCallbacks()
                                                     },
                                                 })
 
-                                                Banking.Balance:Deposit(p.Account, buybackPrice, {
+                                                local afterrr = Banking.Balance:Deposit(p.Account, buybackPrice, {
                                                     type = 'transfer',
                                                     transactionAccount = d.Account,
                                                     title = 'Vehicle Buyback',
@@ -633,6 +635,8 @@ function RegisterCallbacks()
                                                         }
                                                     },
                                                 })
+
+                                                print("Money afterrr:", afterrr)
 
                                                 Vehicles:Delete(veh, function() end)
 
